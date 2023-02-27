@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Document</title>
+</head>
+<body>
+
+    <div class="container" id="container">
+
+       
+
+        
+       <button class="start" id="start"> Start  </button>
+
+        <div class="upper" id="upper"> </div>
+
+        <div class="lower" id="lower">
+
+        <Div class="result" id="result"></Div>
+
+        </div>
+
+    
+
+        <div class="buttons" id="buttons"> 
+
+       <button class="next" id="next"> Next</button>
+
+       </div>
+
+    </div>
+
+    <style>
+
+body {
+    position: fixed;
+    top: 0;
+    bottom:0 ;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  background-image: linear-gradient(315deg, #b8c6db 0%, #f5f7f7 100%);
+    
+}
+
+
+
+.container {
+
+    height: 650px;
+    width: 1000px;
+    background-color: lightblue;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.result {
+height: 200px;
+width: 100px;
+background-color: antiquewhite;
+
+}
+
+
+.start {
+    height: 80px;
+    width: 160px;
+    font-size: 30px;
+    background-color: white ;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+
+}
+
+.upper {
+
+    height: 200px;
+    width: 1000px;
+    background-color: whitesmoke;
+    display: none;
+    padding: 10px;
+    font-size: 20px;
+    
+}
+
+.lower {
+
+    height: 375px;
+    width: 1000px;
+    background-color: whitesmoke;
+    display: none;
+    padding: 10px;
+    font-size: 20px;
+
+    }
+
+.buttons {
+        height: 75px;
+        width: 1000px;
+        position: relative;
+        background-color:#03cae4;
+        display: none;
+        padding: 10px;
+     
+    }
+ 
+
+      
+      .next {
+        
+        width: 80px;
+        height: 40px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+        
+      }
+      
+
+
+
+    </style>
+
+  <script>
+let questions = [
+  {
+    question: " John was a student in Ms. Smith's science class. They were studying the human body and the different systems that make it work. John found the topic fascinating and enjoyed learning about all the different organs and how they functioned. One day, Ms. Smith brought in a model of the human skeleton for the class to examine. John was excited to see it up close and was amazed by all the bones and how they fit together to make the structure of the body. After class, John went to the library and checked out a book about the human body. He couldn't wait to learn more about this topic. <br> <br> What was John studying in Ms. Smith's science class?",
+    options: [
+      "The history of the world",
+      "The properties of matter",
+      "The anatomy of the human body",
+      "The behavior of animals"
+    ],
+    answer: 2,
+  },
+  {
+    question: " John was a student in Ms. Smith's science class. They were studying the human body and the different systems that make it work. John found the topic fascinating and enjoyed learning about all the different organs and how they functioned. One day, Ms. Smith brought in a model of the human skeleton for the class to examine. John was excited to see it up close and was amazed by all the bones and how they fit together to make the structure of the body. After class, John went to the library and checked out a book about the human body. He couldn't wait to learn more about this topic. <br> <br> What did Ms. Smith bring in for the class to examine?",
+    options: ["A model of the human skeleton", " A microscope", "A plant ","A rock"],
+    answer: 0,
+  },
+  {
+    question: " John was a student in Ms. Smith's science class. They were studying the human body and the different systems that make it work. John found the topic fascinating and enjoyed learning about all the different organs and how they functioned. One day, Ms. Smith brought in a model of the human skeleton for the class to examine. John was excited to see it up close and was amazed by all the bones and how they fit together to make the structure of the body. After class, John went to the library and checked out a book about the human body. He couldn't wait to learn more about this topic. <br> <br> What did John think of the model of the human skeleton? ",
+    options: ["He found it boring", "He thought it was too complicated to understand", "He was amazed by it","He thought it was gross"],
+    answer: 2,
+  },
+  {
+    question: " John was a student in Ms. Smith's science class. They were studying the human body and the different systems that make it work. John found the topic fascinating and enjoyed learning about all the different organs and how they functioned. One day, Ms. Smith brought in a model of the human skeleton for the class to examine. John was excited to see it up close and was amazed by all the bones and how they fit together to make the structure of the body. After class, John went to the library and checked out a book about the human body. He couldn't wait to learn more about this topic. <br> <br> What did john do after class ",
+    options: ["He went home", "He went to the Library", "He played videogames","He went outside to play"],
+    answer: 1,
+  },
+];
+
+const container = document.getElementById("container");
+const start = document.getElementById("start");
+const upper = document.getElementById("upper");
+const lower = document.getElementById("lower");
+const next = document.getElementById("next");
+const buttons = document.getElementById("buttons");
+const result = document.getElementById("result");
+
+let score = 0;
+let currentQuestionIndex = 0;
+
+start.addEventListener("click", function () {
+  start.style.display = "none";
+  upper.style.display = "block";
+  lower.style.display = "block";
+  next.style.display = "block";
+  buttons.style.display = "block";
+
+
+  showQuestion(currentQuestionIndex);
+});
+
+
+next.addEventListener("click", function () {
+ 
+  const selectedOption = document.querySelector(
+    'input[name="option"]:checked'
+  );
+  if (!selectedOption) {
+    alert("Please select an answer.");
+    return;
+    
+  }
+
+  
+  const selectedOptionIndex = parseInt(selectedOption.value);
+  const currentQuestion = questions[currentQuestionIndex];
+  const isCorrect = selectedOptionIndex === currentQuestion.answer;
+
+  if (isCorrect) {
+    score++;
+    result.textContent = "Correct!";
+    result.style.color = "green";
+    lower.style.backgroundColor = "lightgreen";
+  } else {
+    result.textContent = "Wrong!";
+    result.style.color = "#FFC0CB";
+    lower.style.backgroundColor = "#FFC0CB";
+  }
+
+  setTimeout(() => lower.style.backgroundColor = "whitesmoke", 10);
+
+  result.style.display = "block";
+
+  currentQuestionIndex++;
+
+  if (currentQuestionIndex === questions.length) {
+    showResults();
+  } else {
+    showQuestion(currentQuestionIndex);
+  }
+});
+
+function showQuestion(questionIndex) {
+  const currentQuestion = questions[questionIndex];
+  upper.innerHTML = `<label>${currentQuestion.question}</label>`;
+  const optionsDiv = document.createElement("div");
+  for (let i = 0; i < currentQuestion.options.length; i++) {
+    const label = document.createElement("label");
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "option";
+    radio.value = i;
+    radio.id = `option-${i}`;
+    radio.addEventListener("click", function () {
+      const currentQuestion = questions[currentQuestionIndex];
+      const isCorrect = parseInt(this.value) === currentQuestion.answer;
+      if (isCorrect) {
+        lower.style.backgroundColor = "lightgreen";
+      } else {
+        lower.style.backgroundColor = "#FFC0CB";
+      }
+    });
+    label.appendChild(radio);
+    label.appendChild(document.createTextNode(currentQuestion.options[i]));
+    optionsDiv.appendChild(label);
+    optionsDiv.appendChild(document.createElement("br"));
+    optionsDiv.appendChild(document.createElement("br"));
+    optionsDiv.appendChild(document.createElement("br"));
+  }
+  lower.innerHTML = "";
+  lower.appendChild(optionsDiv);
+}
+
+function showResults() {
+  lower.innerHTML = `<label>Your score is ${score} out of ${questions.length} with percentage of ${(score/questions.length)*100}% </label>`;
+  upper.innerHTML = "";
+  next.style.display = "none";
+}
+
+
+
+  </script>
+    
+</body>
+</html>
